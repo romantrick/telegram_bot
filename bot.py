@@ -3,6 +3,7 @@ import os
 import requests
 import decimal # Для точной работы с большими числами APY
 import json
+import asyncio
 from web3 import Web3
 from dotenv import load_dotenv # Добавляем импорт
 from telegram import Update
@@ -89,6 +90,7 @@ def get_crypto_prices():
         return None
 
 # Функция для получения APY из Aave V3 PoolDataProvider
+# Note: This is a synchronous function, call it with asyncio.to_thread from async handlers
 def get_aave_asset_apy(asset_address: str, asset_symbol: str):
     """Получает текущий Supply APY для указанного актива из Aave V3 PoolDataProvider."""
     if not w3:
@@ -121,10 +123,10 @@ def get_aave_asset_apy(asset_address: str, asset_symbol: str):
         return None
 # Обработчик команды /prices
 async def prices_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Отправляет сообщение с текущими ценами криптовалют."""
+    """Отправляет сообщение с текущими ценами криптовалют с CoinGecko."""
     prices = get_crypto_prices()
     if prices:
-        message_lines = ["Текущие курсы:\n"]
+        message_lines = ["Текущие курсы (CoinGecko):\n"]
         # Форматируем вывод цен
         for coin_id in COIN_IDS:
             coin_data = prices.get(coin_id)
@@ -139,50 +141,55 @@ async def prices_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             else:
                  message_lines.append(f"Не удалось получить цену для {coin_id.upper()}")
 
-        # --- Добавляем Aave APY ---
-        message_lines.append("\nAave v3 Supply APY (Ethereum):")
-
-        # Получаем APY для WETH
-        weth_apy = get_aave_asset_apy(WETH_ADDRESS, "WETH")
-        if weth_apy is not None:
-            message_lines.append(f"  WETH: {weth_apy:.2f}%")
-        else:
-            message_lines.append("  WETH: Ошибка получения")
-
-        # Получаем APY для USDC
-        usdc_apy = get_aave_asset_apy(USDC_ADDRESS, "USDC")
-        if usdc_apy is not None:
-            message_lines.append(f"  USDC: {usdc_apy:.2f}%")
-        else:
-            message_lines.append("  USDC: Ошибка получения")
-        # --- Конец блока Aave APY ---
-
         message = "\n".join(message_lines)
         await update.message.reply_text(message)
     else:
-        # Если не удалось получить цены CoinGecko, все равно попробуем получить APY
-        message_lines = ["Не удалось получить курсы CoinGecko."]
-        message_lines.append("\nAave v3 Supply APY (Ethereum):")
-        weth_apy = get_aave_asset_apy(WETH_ADDRESS, "WETH")
-        usdc_apy = get_aave_asset_apy(USDC_ADDRESS, "USDC")
+        await update.message.reply_text("Не удалось получить курсы с CoinGecko. Попробуйте позже.")
 
-        apy_fetched = False
+# Обработчик команды /apy
+async def apy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Отправляет сообщение с текущими Aave V3 Supply APY."""
+    if not w3:
+        await update.message.reply_text("Ошибка: Соединение с Ethereum не настроено (ETH_RPC_URL).")
+        return
+
+    message_lines = ["Aave v3 Supply APY (Ethereum):\n"]
+    apy_fetched = False
+
+    # Получаем APY для WETH асинхронно
+    try:
+        logger.info("Запрос APY для WETH...")
+        # Запускаем синхронную функцию в отдельном потоке
+        weth_apy = await asyncio.to_thread(get_aave_asset_apy, WETH_ADDRESS, "WETH")
         if weth_apy is not None:
             message_lines.append(f"  WETH: {weth_apy:.2f}%")
             apy_fetched = True
         else:
             message_lines.append("  WETH: Ошибка получения")
+    except Exception as e:
+        logger.error(f"Неожиданная ошибка при получении WETH APY: {e}", exc_info=True)
+        message_lines.append("  WETH: Ошибка получения (внутренняя)")
 
+
+    # Получаем APY для USDC асинхронно
+    try:
+        logger.info("Запрос APY для USDC...")
+        # Запускаем синхронную функцию в отдельном потоке
+        usdc_apy = await asyncio.to_thread(get_aave_asset_apy, USDC_ADDRESS, "USDC")
         if usdc_apy is not None:
             message_lines.append(f"  USDC: {usdc_apy:.2f}%")
             apy_fetched = True
         else:
             message_lines.append("  USDC: Ошибка получения")
+    except Exception as e:
+        logger.error(f"Неожиданная ошибка при получении USDC APY: {e}", exc_info=True)
+        message_lines.append("  USDC: Ошибка получения (внутренняя)")
 
-        if apy_fetched:
-            await update.message.reply_text("\n".join(message_lines))
-        else:
-             await update.message.reply_text("Не удалось получить данные ни о курсах CoinGecko, ни об Aave APY. Попробуйте позже.")
+
+    if apy_fetched:
+        await update.message.reply_text("\n".join(message_lines))
+    else:
+         await update.message.reply_text("Не удалось получить данные Aave APY. Проверьте логи или попробуйте позже.")
 
 # Обработчик команды /start
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -192,7 +199,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         rf"Привет, {user.mention_html()}! Я бот для отображения курсов криптовалют.",
         reply_markup=None, # Можно добавить клавиатуру, если нужно
     )
-    await update.message.reply_text("Используйте команду /prices, чтобы узнать текущие курсы BTC, ETH и CRV.")
+    await update.message.reply_text("Используйте команду /prices для курсов CoinGecko или /apy для Aave APY.")
 
 def main() -> None:
     """Запускает бота."""
@@ -212,6 +219,7 @@ def main() -> None:
     # Регистрируем обработчики команд
     application.add_handler(CommandHandler("start", start_command))
     application.add_handler(CommandHandler("prices", prices_command))
+    application.add_handler(CommandHandler("apy", apy_command)) # Добавляем новый обработчик
 
     # Запускаем бота до принудительной остановки
     logger.info("Бот запускается...")
