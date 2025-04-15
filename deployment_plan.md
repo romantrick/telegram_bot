@@ -12,13 +12,13 @@
 
 *   **Платформа:** Render.com
 *   **Тип сервиса:** Background Worker (т.к. бот должен работать постоянно в фоне).
-*   **Метод доставки кода:** Docker-образ, загруженный в публичный или приватный реестр контейнеров (например, Docker Hub, GitHub Container Registry).
+*   **Метод доставки кода:** Прямое подключение к GitHub-репозиторию (`https://github.com/romantrick/telegram_bot.git`). Render будет автоматически собирать Docker-образ из `Dockerfile` в репозитории.
 
-## 3. Подготовка Docker-образа
+## 3. Подготовка репозитория (Уже сделано)
 
-### `Dockerfile`
+### `Dockerfile` (Уже в репозитории)
 
-Создайте файл `Dockerfile` в корне проекта (рядом с `bot.py` и `requirements.txt`) со следующим содержимым:
+Файл `Dockerfile` должен находиться в корне вашего репозитория со следующим содержимым:
 
 ```dockerfile
 # Используем официальный образ Python 3.9 slim как базовый
@@ -46,45 +46,36 @@ COPY bot.py .
 CMD ["python", "-u", "bot.py"]
 ```
 
-### Сборка и отправка образа
+### Файлы в репозитории
 
-Выполните следующие команды в терминале в папке с `Dockerfile`:
-
-1.  **Сборка образа:**
-    ```bash
-    docker build -t ваш_логин_в_реестре/имя_бота:latest .
-    ```
-    *Замените `ваш_логин_в_реестре/имя_бота` на актуальный путь к вашему образу (например, `ваш_dockerhub_логин/my-telegram-bot`).*
-
-2.  **Вход в реестр:**
-    ```bash
-    docker login # Для Docker Hub
-    # или команды для вашего реестра (e.g., ghcr.io, Gitlab)
-    ```
-
-3.  **Отправка образа:**
-    ```bash
-    docker push ваш_логин_в_реестре/имя_бота:latest
-    ```
+Убедитесь, что в вашем репозитории (`master` ветка) находятся как минимум:
+*   `bot.py`
+*   `requirements.txt`
+*   `Dockerfile`
+*   `.gitignore` (чтобы исключить секреты и ненужные файлы)
+(Эти файлы уже были добавлены и отправлены на GitHub).
 
 ## 4. Настройка сервиса в Render
 
 1.  Войдите в ваш аккаунт Render.
 2.  Нажмите "New +" -> "Background Worker".
-3.  Выберите "Deploy an existing image from a registry".
-4.  **Image Path:** Укажите полный путь к вашему образу, который вы отправили в реестр (например, `docker.io/ваш_dockerhub_логин/my-telegram-bot:latest` или `ghcr.io/ваш_github_логин/my-telegram-bot:latest`).
-5.  **Name:** Дайте имя вашему сервису (например, `telegram-crypto-bot`).
-6.  **Region:** Выберите регион.
-7.  **Instance Type:** Выберите тарифный план (можно начать с бесплатного "Free", если доступен для Background Workers и подходит по ресурсам).
-8.  **Environment Variables:**
+3.  Выберите "Build and deploy from a Git repository".
+4.  Подключите ваш GitHub-аккаунт к Render, если еще не сделали этого.
+5.  Выберите репозиторий `romantrick/telegram_bot`.
+6.  **Name:** Дайте имя вашему сервису (например, `telegram-crypto-bot`).
+7.  **Region:** Выберите регион.
+8.  **Branch:** Убедитесь, что выбрана ветка `master`.
+9.  **Runtime:** Выберите **Docker**. Render автоматически найдет и использует ваш `Dockerfile`.
+10. **Instance Type:** Выберите тарифный план (можно начать с бесплатного "Free").
+11. **Environment Variables:**
     *   Нажмите "+ Add Environment Variable".
     *   **Key:** `TELEGRAM_BOT_TOKEN`
     *   **Value:** Вставьте ваш секретный токен Telegram-бота.
     *   Убедитесь, что переменная помечена как "Secret".
-9.  Нажмите "Create Background Worker".
+12. Нажмите "Create Background Worker".
 
 ## 5. Запуск и мониторинг
 
-*   Render автоматически скачает ваш Docker-образ и запустит контейнер, выполнив команду `CMD` из `Dockerfile`.
+*   Render автоматически скачает код из вашего GitHub-репозитория, соберет Docker-образ с помощью `Dockerfile` и запустит контейнер, выполнив команду `CMD`.
 *   Следите за логами развертывания и работы бота во вкладке "Logs" вашего сервиса в Render.
 *   Проверьте работу бота в Telegram.
