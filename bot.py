@@ -62,7 +62,10 @@ def main() -> None:
         return
 
     # Создаем приложение и передаем ему токен бота.
-    application = Application.builder().token(token).build()
+    # Увеличиваем таймауты для подключения и чтения до 30 секунд
+    from telegram.request import HTTPXRequest
+    request = HTTPXRequest(connect_timeout=30.0, read_timeout=30.0)
+    application = Application.builder().token(token).request(request).build()
 
     # Регистрируем обработчик команды /prices
     application.add_handler(CommandHandler("prices", prices_command))
