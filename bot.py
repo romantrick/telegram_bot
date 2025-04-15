@@ -17,7 +17,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Загружаем переменные окружения из файла .env
-load_dotenv()
+# Явно указываем путь к файлу .env
+load_dotenv(dotenv_path='.env')
 
 # ID криптовалют на CoinGecko
 COIN_IDS = ["bitcoin", "ethereum", "curve-dao-token"]
