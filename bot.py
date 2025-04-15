@@ -61,16 +61,10 @@ AAVE_POOL_DATA_PROVIDER_ABI = json.loads("""
 WETH_ADDRESS = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
 USDC_ADDRESS = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
 
-# Web3 Setup
+# Web3 Setup - Store RPC URL globally, initialize instance on demand
 ETH_RPC_URL = os.getenv("ETH_RPC_URL")
 if not ETH_RPC_URL:
     logger.warning("ETH_RPC_URL environment variable not set. Aave APY fetching will be disabled.")
-    w3 = None
-else:
-    w3 = Web3(Web3.HTTPProvider(ETH_RPC_URL))
-    if not w3.is_connected():
-        logger.error(f"Failed to connect to Ethereum node at {ETH_RPC_URL}")
-        w3 = None # Disable if connection fails
 
 # Константа для конвертации из RAY (27 знаков)
 RAY = decimal.Decimal(10**27)
@@ -91,10 +85,10 @@ def get_crypto_prices():
 
 # Функция для получения APY из Aave V3 PoolDataProvider
 # Note: This is a synchronous function, call it with asyncio.to_thread from async handlers
-def get_aave_asset_apy(asset_address: str, asset_symbol: str):
+def get_aave_asset_apy(w3_instance: Web3, asset_address: str, asset_symbol: str):
     """Получает текущий Supply APY для указанного актива из Aave V3 PoolDataProvider."""
-    if not w3:
-        logger.warning("Web3 connection not available. Skipping Aave APY fetch.")
+    if not w3_instance:
+        logger.error("Экземпляр Web3 не передан в get_aave_asset_apy.")
         return None
 
     try:
@@ -149,8 +143,8 @@ async def prices_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 # Обработчик команды /apy
 async def apy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Отправляет сообщение с текущими Aave V3 Supply APY."""
-    if not w3:
-        await update.message.reply_text("Ошибка: Соединение с Ethereum не настроено (ETH_RPC_URL).")
+    if not ETH_RPC_URL:
+        await update.message.reply_text("Ошибка: ETH_RPC_URL не установлен в переменных окружения.")
         return
 
     message_lines = ["Aave v3 Supply APY (Ethereum):\n"]
@@ -158,9 +152,16 @@ async def apy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 
     # Получаем APY для WETH асинхронно
     try:
-        logger.info("Запрос APY для WETH...")
-        # Запускаем синхронную функцию в отдельном потоке
-        weth_apy = await asyncio.to_thread(get_aave_asset_apy, WETH_ADDRESS, "WETH")
+        logger.info("Попытка подключения к Ethereum RPC...")
+        w3 = Web3(Web3.HTTPProvider(ETH_RPC_URL))
+        if not await asyncio.to_thread(w3.is_connected): # Проверяем соединение асинхронно
+             logger.error(f"Не удалось подключиться к Ethereum node по адресу {ETH_RPC_URL}")
+             await update.message.reply_text(f"Ошибка: Не удалось подключиться к Ethereum node.")
+             return
+
+        logger.info("Успешно подключено к Ethereum RPC. Запрос APY для WETH...")
+        # Запускаем синхронную функцию в отдельном потоке, передавая w3
+        weth_apy = await asyncio.to_thread(get_aave_asset_apy, w3, WETH_ADDRESS, "WETH")
         if weth_apy is not None:
             message_lines.append(f"  WETH: {weth_apy:.2f}%")
             apy_fetched = True
@@ -173,9 +174,15 @@ async def apy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 
     # Получаем APY для USDC асинхронно
     try:
+        # Используем тот же экземпляр w3, если он был успешно создан
+        if not w3: # Дополнительная проверка на всякий случай
+             logger.error("Экземпляр w3 не был создан ранее.")
+             await update.message.reply_text("Внутренняя ошибка: экземпляр Web3 не создан.")
+             return
+
         logger.info("Запрос APY для USDC...")
-        # Запускаем синхронную функцию в отдельном потоке
-        usdc_apy = await asyncio.to_thread(get_aave_asset_apy, USDC_ADDRESS, "USDC")
+        # Запускаем синхронную функцию в отдельном потоке, передавая w3
+        usdc_apy = await asyncio.to_thread(get_aave_asset_apy, w3, USDC_ADDRESS, "USDC")
         if usdc_apy is not None:
             message_lines.append(f"  USDC: {usdc_apy:.2f}%")
             apy_fetched = True
