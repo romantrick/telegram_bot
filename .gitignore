@@ -1,0 +1,25 @@
+# Sensitive configuration
+config.py
+
+# Unrelated scripts
+get_balances.py
+get_balance_bring.sh
+
+# Render specific file (not needed for Docker deployment via GitHub)
+render.yaml
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+.env
+*.env
+
+# OS generated files
+.DS_Store
+Thumbs.db
