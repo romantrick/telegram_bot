@@ -62,10 +62,33 @@ AAVE_POOL_DATA_PROVIDER_ABI = json.loads("""
 WETH_ADDRESS = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
 USDC_ADDRESS = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
 
+# --- Curve crvUSD Vault Configuration (crv/crvUSD pool) ---
+CURVE_CRVUSD_VAULT_ADDRESS = "0xCeA18a8752bb7e7817F9AE7565328FE415C0f2cA"
+# Minimal ABI for lend_apr function
+CURVE_VAULT_ABI = json.loads("""
+[
+ {
+   "inputs": [],
+   "name": "lend_apr",
+   "outputs": [
+     {
+       "internalType": "uint256",
+       "name": "",
+       "type": "uint256"
+     }
+   ],
+   "stateMutability": "view",
+   "type": "function"
+ }
+]
+""")
+# Константа для конвертации результата lend_apr (предполагаем 1e18)
+CURVE_APR_DECIMALS = decimal.Decimal(10**18)
+
 # Web3 Setup - Store RPC URL globally, initialize instance on demand
 ETH_RPC_URL = os.getenv("ETH_RPC_URL")
 if not ETH_RPC_URL:
-    logger.warning("ETH_RPC_URL environment variable not set. Aave APY fetching will be disabled.")
+   logger.warning("ETH_RPC_URL environment variable not set. APY fetching will be disabled.")
 
 # Константа для конвертации из RAY (27 знаков)
 RAY = decimal.Decimal(10**27)
@@ -116,6 +139,36 @@ def get_aave_asset_apy(w3_instance: Web3, asset_address: str, asset_symbol: str)
     except Exception as e:
         logger.error(f"Ошибка при запросе к Aave PoolDataProvider для {asset_symbol} ({asset_address}): {e}")
         return None
+
+# Функция для получения APY из Curve crvUSD Vault
+# Note: This is a synchronous function, call it with asyncio.to_thread from async handlers
+def get_curve_crvusd_apy(w3_instance: Web3):
+    """Получает текущий Lend APY для crvUSD Vault (crv/crvUSD) из Curve."""
+    if not w3_instance:
+        logger.error("Экземпляр Web3 не передан в get_curve_crvusd_apy.")
+        return None
+
+    try:
+        # Создаем объект контракта
+        # Адрес должен быть Checksum Address
+        checksum_vault_address = w3_instance.to_checksum_address(CURVE_CRVUSD_VAULT_ADDRESS)
+        vault_contract = w3_instance.eth.contract(
+            address=checksum_vault_address,
+            abi=CURVE_VAULT_ABI
+        )
+
+        # Вызываем функцию lend_apr
+        raw_lend_apr = vault_contract.functions.lend_apr().call()
+
+        # Конвертируем из uint256 (предполагаем 1e18) в проценты
+        lend_apy_percent = (decimal.Decimal(raw_lend_apr) / CURVE_APR_DECIMALS) * 100
+        logger.info(f"Successfully fetched Curve crvUSD Lend APY: {lend_apy_percent:.4f}% (Raw: {raw_lend_apr})")
+        return lend_apy_percent
+
+    except Exception as e:
+        logger.error(f"Ошибка при запросе к Curve Vault ({CURVE_CRVUSD_VAULT_ADDRESS}): {e}")
+        return None
+
 # Обработчик команды /prices
 async def prices_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Отправляет сообщение с текущими ценами криптовалют с CoinGecko."""
@@ -143,13 +196,14 @@ async def prices_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
 # Обработчик команды /apy
 async def apy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Отправляет сообщение с текущими Aave V3 Supply APY."""
+    """Отправляет сообщение с текущими Aave V3 Supply APY и Curve crvUSD Lend APY."""
     if not ETH_RPC_URL:
         await update.message.reply_text("Ошибка: ETH_RPC_URL не установлен в переменных окружения.")
         return
 
-    message_lines = ["Aave v3 Supply APY (Ethereum):\n"]
-    apy_fetched = False
+    message_lines = ["Текущие APY (Ethereum):\n"]
+    apy_fetched_any = False # Флаг, что удалось получить хотя бы один APY
+    w3 = None # Инициализируем w3 здесь для доступа во всех блоках try
 
     # Получаем APY для WETH асинхронно
     try:
@@ -164,13 +218,13 @@ async def apy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         # Запускаем синхронную функцию в отдельном потоке, передавая w3
         weth_apy = await asyncio.to_thread(get_aave_asset_apy, w3, WETH_ADDRESS, "WETH")
         if weth_apy is not None:
-            message_lines.append(f"  WETH: {weth_apy:.2f}%")
-            apy_fetched = True
+            message_lines.append(f"  Aave WETH Supply: {weth_apy:.2f}%")
+            apy_fetched_any = True
         else:
-            message_lines.append("  WETH: Ошибка получения")
+            message_lines.append("  Aave WETH Supply: Ошибка получения")
     except Exception as e:
         logger.error(f"Неожиданная ошибка при получении WETH APY: {e}", exc_info=True)
-        message_lines.append("  WETH: Ошибка получения (внутренняя)")
+        message_lines.append("  Aave WETH Supply: Ошибка получения (внутренняя)")
 
 
     # Получаем APY для USDC асинхронно
@@ -185,19 +239,39 @@ async def apy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         # Запускаем синхронную функцию в отдельном потоке, передавая w3
         usdc_apy = await asyncio.to_thread(get_aave_asset_apy, w3, USDC_ADDRESS, "USDC")
         if usdc_apy is not None:
-            message_lines.append(f"  USDC: {usdc_apy:.2f}%")
-            apy_fetched = True
+            message_lines.append(f"  Aave USDC Supply: {usdc_apy:.2f}%")
+            apy_fetched_any = True
         else:
-            message_lines.append("  USDC: Ошибка получения")
+            message_lines.append("  Aave USDC Supply: Ошибка получения")
     except Exception as e:
         logger.error(f"Неожиданная ошибка при получении USDC APY: {e}", exc_info=True)
-        message_lines.append("  USDC: Ошибка получения (внутренняя)")
+        message_lines.append("  Aave USDC Supply: Ошибка получения (внутренняя)")
 
+    # Получаем APY для Curve crvUSD Lend асинхронно
+    try:
+        # Используем тот же экземпляр w3, если он был успешно создан
+        if not w3:
+             logger.error("Экземпляр w3 не был создан ранее для Curve.")
+             # Не отправляем сообщение об ошибке здесь, т.к. могли получить Aave APY
+        else:
+            logger.info("Запрос APY для Curve crvUSD Lend...")
+            # Запускаем синхронную функцию в отдельном потоке, передавая w3
+            curve_apy = await asyncio.to_thread(get_curve_crvusd_apy, w3)
+            if curve_apy is not None:
+                message_lines.append(f"\nCurve crv/crvUSD Lend: {curve_apy:.2f}%")
+                apy_fetched_any = True
+            else:
+                message_lines.append("\nCurve crv/crvUSD Lend: Ошибка получения")
+    except Exception as e:
+        logger.error(f"Неожиданная ошибка при получении Curve APY: {e}", exc_info=True)
+        message_lines.append("\nCurve crv/crvUSD Lend: Ошибка получения (внутренняя)")
 
-    if apy_fetched:
+    # Отправляем итоговое сообщение
+    if apy_fetched_any:
         await update.message.reply_text("\n".join(message_lines))
     else:
-         await update.message.reply_text("Не удалось получить данные Aave APY. Проверьте логи или попробуйте позже.")
+         # Это сообщение отправится, только если ВСЕ запросы APY не удались
+         await update.message.reply_text("Не удалось получить данные APY. Проверьте логи или попробуйте позже.")
 
 # Обработчик команды /start
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -207,7 +281,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         rf"Привет, {user.mention_html()}! Я бот для отображения курсов криптовалют.",
         reply_markup=None, # Можно добавить клавиатуру, если нужно
     )
-    await update.message.reply_text("Используйте команду /prices для курсов CoinGecko или /apy для Aave APY.")
+    await update.message.reply_text("Используйте команду /prices для курсов CoinGecko или /apy для Aave и Curve APY.")
 
 def main() -> None:
     """Запускает бота."""
