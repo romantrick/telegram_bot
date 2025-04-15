@@ -94,14 +94,14 @@ def get_aave_asset_apy(w3_instance: Web3, asset_address: str, asset_symbol: str)
 
     try:
         # Создаем объект контракта
-        pool_data_provider_contract = w3.eth.contract(
+        pool_data_provider_contract = w3_instance.eth.contract( # Use w3_instance here
             address=AAVE_POOL_DATA_PROVIDER_ADDRESS,
             abi=AAVE_POOL_DATA_PROVIDER_ABI
         )
 
         # Вызываем функцию getReserveData
         # Адрес должен быть Checksum Address
-        checksum_asset_address = w3.to_checksum_address(asset_address)
+        checksum_asset_address = w3_instance.to_checksum_address(asset_address) # Use w3_instance here
         reserve_data = pool_data_provider_contract.functions.getReserveData(checksum_asset_address).call()
 
         # Индексы нужных значений в кортеже результата:
