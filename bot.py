@@ -25,6 +25,7 @@ VS_CURRENCY = "usd"  # Валюта для сравнения (доллары С
 # --- Aave V3 PoolDataProvider Configuration ---
 AAVE_POOL_DATA_PROVIDER_ADDRESS = "0x7B4EB56E7CD4b454BA8ff71E4518426369a138a3"
 # Minimal ABI for getReserveData function
+# Corrected ABI for PoolDataProvider's getReserveData function
 AAVE_POOL_DATA_PROVIDER_ABI = json.loads("""
 [
   {
@@ -37,18 +38,18 @@ AAVE_POOL_DATA_PROVIDER_ABI = json.loads("""
     ],
     "name": "getReserveData",
     "outputs": [
-      { "internalType": "uint256", "name": "unbacked", "type": "uint256" },
-      { "internalType": "uint256", "name": "accruedToTreasuryScaled", "type": "uint256" },
-      { "internalType": "uint256", "name": "totalAToken", "type": "uint256" },
-      { "internalType": "uint256", "name": "totalStableDebt", "type": "uint256" },
-      { "internalType": "uint256", "name": "totalVariableDebt", "type": "uint256" },
+      { "internalType": "uint256", "name": "output1", "type": "uint256" },
+      { "internalType": "uint256", "name": "output2", "type": "uint256" },
+      { "internalType": "uint256", "name": "output3", "type": "uint256" },
+      { "internalType": "uint256", "name": "output4", "type": "uint256" },
+      { "internalType": "uint256", "name": "output5", "type": "uint256" },
       { "internalType": "uint256", "name": "liquidityRate", "type": "uint256" },
-      { "internalType": "uint256", "name": "variableBorrowRate", "type": "uint256" },
-      { "internalType": "uint256", "name": "stableBorrowRate", "type": "uint256" },
-      { "internalType": "uint256", "name": "averageStableBorrowRate", "type": "uint256" },
-      { "internalType": "uint40", "name": "liquidityIndex", "type": "uint40" },
-      { "internalType": "uint40", "name": "variableBorrowIndex", "type": "uint40" },
-      { "internalType": "uint128", "name": "lastUpdateTimestamp", "type": "uint128" }
+      { "internalType": "uint256", "name": "output7", "type": "uint256" },
+      { "internalType": "uint256", "name": "output8", "type": "uint256" },
+      { "internalType": "uint256", "name": "output9", "type": "uint256" },
+      { "internalType": "uint128", "name": "liquidityIndex", "type": "uint128" },
+      { "internalType": "uint128", "name": "variableBorrowIndex", "type": "uint128" },
+      { "internalType": "uint40", "name": "lastUpdateTimestamp", "type": "uint40" }
     ],
     "stateMutability": "view",
     "type": "function"
