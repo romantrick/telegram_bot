@@ -56,11 +56,12 @@ def get_defilama_pools_data_sync() -> dict | None:
         data = response.json()
         if 'data' in data and isinstance(data['data'], list):
             logger.info(f"Успешно получено {len(data['data'])} пулов с DefiLlama.")
-            # Создаем словарь для быстрого доступа по ID
-            pools_dict = {pool['id']: pool for pool in data['data']}
-            return pools_dict
+            # Создаем словарь для быстрого доступа по ключу 'pool', пропуская пулы без него
+            pools_dict_by_pool_key = {pool.get('pool'): pool for pool in data['data'] if pool.get('pool')}
+            logger.info(f"Создан словарь для {len(pools_dict_by_pool_key)} пулов с ключом 'pool'.")
+            return pools_dict_by_pool_key
         else:
-            logger.error("Ошибка: Неожиданный формат ответа от DefiLlama API.")
+            logger.error("Ошибка: Неожиданный формат ответа от DefiLlama API. Ключ 'data' отсутствует или не является списком.")
             return None
     except requests.exceptions.Timeout:
         logger.error(f"Ошибка: Таймаут при запросе к {DEFILLAMA_POOLS_URL}")
@@ -160,13 +161,15 @@ async def pools_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         pool_id = pool_config.get("defilama_id")
         user_comment = pool_config.get("user_comment", "N/A")
         found_pool_data = None
+        # Используем 'defilama_id' из конфига как ключ 'pool' для поиска в словаре
+        pool_key_from_config = pool_id # pool_id из конфига теперь ищем как ключ 'pool'
 
-        # Поиск по ID
-        if pool_id and pool_id in defilama_data_dict:
-            found_pool_data = defilama_data_dict[pool_id]
+        # Поиск по ключу 'pool' (бывший 'id')
+        if pool_key_from_config and pool_key_from_config in defilama_data_dict:
+            found_pool_data = defilama_data_dict[pool_key_from_config]
             found_count += 1
         else:
-            # Поиск по chain/project/symbol (если ID нет или не найден)
+            # Поиск по chain/project/symbol (оставляем как запасной вариант, если ID/pool не найден)
             # Этот поиск может быть неточным и медленным, если пулов много
             conf_chain = pool_config.get("chain", "").lower()
             conf_project = pool_config.get("project", "").lower()
