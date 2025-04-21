@@ -80,20 +80,26 @@ def get_defilama_pools_data_sync() -> dict | None:
         return None
 
 def format_number(number) -> str:
-    """Форматирует число для вывода (добавляет запятые, округляет)."""
+    """Форматирует число для вывода (добавляет запятые, округляет) и экранирует точки для MarkdownV2."""
+    # Эта функция скопирована из bot.py с последним исправлением
     if number is None:
         return "N/A"
     try:
         num = float(number)
+        formatted_num_str = ""
         if num >= 1_000_000_000:
-            return f"{num / 1_000_000_000:.2f}B"
-        if num >= 1_000_000:
-            return f"{num / 1_000_000:.2f}M"
-        if num >= 1_000:
-            return f"{num / 1_000:.2f}K"
-        if 0 < abs(num) < 0.01:
-             return f"{num:.4f}" # Для очень маленьких APY
-        return f"{num:,.2f}"
+            formatted_num_str = f"{num / 1_000_000_000:.2f}B"
+        elif num >= 1_000_000:
+            formatted_num_str = f"{num / 1_000_000:.2f}M"
+        elif num >= 1_000:
+            formatted_num_str = f"{num / 1_000:.2f}K"
+        elif 0 < abs(num) < 0.01:
+             formatted_num_str = f"{num:.4f}" # Для очень маленьких APY
+        else:
+            formatted_num_str = f"{num:,.2f}"
+
+        # Экранируем точку для MarkdownV2
+        return formatted_num_str.replace('.', '\\.')
     except (ValueError, TypeError):
         return "N/A"
 
@@ -154,12 +160,16 @@ if __name__ == "__main__":
             if apy is None:
                  apy = found_pool_data.get('apyBase')
             tvl = found_pool_data.get('tvlUsd')
-            result_line += f"Найден -> APY: {format_number(apy)}%, TVL: ${format_number(tvl)}"
-            # Дополнительно выведем сам найденный объект для отладки
-            # logger.debug(f"Данные для '{user_comment}': {found_pool_data}")
+            chain = found_pool_data.get('chain', 'N/A') # Получаем сеть
+            # Имитируем строку для MarkdownV2, добавляем сеть в скобках
+            # Экранируем скобки вокруг сети
+            result_line = f"`{user_comment}` \\({chain}\\): APY `{format_number(apy)}%`, TVL `${format_number(tvl)}`"
         else:
-            result_line += "Не найден"
+            # Добавляем сеть и для ненайденных, если она есть в конфиге
+            chain_from_config = pool_config.get("chain", "N/A")
+            result_line = f"`{user_comment}` \\({chain_from_config}\\): Не найден"
 
+        # Выводим имитированную строку сообщения
         logger.info(result_line)
 
     logger.info(f"\n--- Тест завершен. Найдено данных для {found_count} из 5 проверенных пулов. ---")
