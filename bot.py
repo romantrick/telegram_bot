@@ -20,7 +20,7 @@ load_dotenv(dotenv_path='.env')
 
 # --- Конфигурация ---
 POOLS_CONFIG_PATH = "pools_config.json"
-DEFILLAMA_POOLS_URL = "https://api.llama.fi/pools"
+DEFILLAMA_POOLS_URL = "https://yields.llama.fi/pools" # Исправленный URL
 
 # ID криптовалют на CoinGecko (для команды /prices)
 COIN_IDS = ["bitcoin", "ethereum", "curve-dao-token"]
