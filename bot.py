@@ -114,7 +114,8 @@ async def prices_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     """Отправляет сообщение с текущими ценами криптовалют с CoinGecko."""
     prices = await asyncio.to_thread(get_crypto_prices) # Выполняем синхронный запрос в потоке
     if prices:
-        message_lines = ["*Текущие курсы (CoinGecko):*\n"]
+        # Экранируем скобки в заголовке для MarkdownV2
+        message_lines = ["*Текущие курсы \\(CoinGecko\\):*\n"]
         for coin_id in COIN_IDS:
             coin_data = prices.get(coin_id)
             if coin_data and VS_CURRENCY in coin_data:
@@ -154,7 +155,8 @@ async def pools_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         return
 
     # 3. Сопоставляем и форматируем результат
-    message_lines = ["*Данные по пулам (DefiLlama):*\n"]
+    # Экранируем скобки в заголовке для MarkdownV2
+    message_lines = ["*Данные по пулам \\(DefiLlama\\):*\n"]
     found_count = 0
 
     for pool_config in tracked_pools:
@@ -227,7 +229,8 @@ async def pools_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                  last_newline = part.rfind('\n')
                  if last_newline != -1:
                      part = part[:last_newline]
-                 part += "\n_(продолжение следует...)_"
+                 # Экранируем скобки и точки в сообщении о продолжении
+                 part += "\n_\\(продолжение следует\\.\\.\\.\\)_"
 
             await update.message.reply_text(part, parse_mode=ParseMode.MARKDOWN_V2)
             await asyncio.sleep(0.5) # Небольшая задержка между частями
