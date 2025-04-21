@@ -4,503 +4,575 @@
     "chain": "ethereum",
     "project": "aave",
     "symbol": "gho",
-    "user_comment": "aave gho"
+    "user_comment": "aave gho",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "aa70268e-4b52-42bf-a116-608b370f9501",
     "chain": "ethereum",
     "project": "aave",
     "symbol": "usdc",
-    "user_comment": "aave usdc"
+    "user_comment": "aave usdc",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "7da72d09-56ca-4ec5-a45f-59114353e487",
     "chain": "ethereum",
     "project": "compound",
     "symbol": "usdc",
-    "user_comment": "compound usdc"
+    "user_comment": "compound usdc",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": null,
     "chain": "ethereum",
     "project": "compound",
     "symbol": "usds",
-    "user_comment": "compound usds"
+    "user_comment": "compound usds",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "0302b78c-dad6-4867-afe1-a53543a6691e",
     "chain": "ethereum",
     "project": "curve",
     "symbol": "crvusd/crv",
-    "user_comment": "curve crvusd/crv"
+    "user_comment": "curve crvusd/crv",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "66985a81-9c51-46ca-9977-42b4fe7bc6df",
     "chain": "ethereum",
     "project": "ethena",
     "symbol": "usde",
-    "user_comment": "ethena usde"
+    "user_comment": "ethena usde",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "a0f53224-c152-416e-8599-4563e70c6040",
     "chain": "ethereum",
     "project": "euler",
     "symbol": "usdc prime",
-    "user_comment": "euler usdc prime"
+    "user_comment": "euler usdc prime",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "fa68041a-2ce5-4ee5-88a0-ec5185f0bdb7",
     "chain": "ethereum",
     "project": "euler",
     "symbol": "usdc yield",
-    "user_comment": "euler usdc yield"
+    "user_comment": "euler usdc yield",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": null,
     "chain": "ethereum",
     "project": "fluid",
     "symbol": "GHO",
-    "user_comment": "fluid GHO"
+    "user_comment": "fluid GHO",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": null,
     "chain": "ethereum",
     "project": "fluid",
     "symbol": "sUSDS",
-    "user_comment": "fluid sUSDS"
+    "user_comment": "fluid sUSDS",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "4438dabc-7f0c-430b-8136-2722711ae663",
     "chain": "ethereum",
     "project": "fluid",
     "symbol": "USDC",
-    "user_comment": "fluid USDC"
+    "user_comment": "fluid USDC",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "456f5bec-a81b-4862-926b-e9e00c97e7c7",
     "chain": "ethereum",
     "project": "morpho",
     "symbol": "gauntlet eUSD core",
-    "user_comment": "morpho gauntlet eUSD core"
+    "user_comment": "morpho gauntlet eUSD core",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "468e4c2c-02df-427a-b2c7-5cea3a77014a",
     "chain": "ethereum",
     "project": "morpho",
     "symbol": "gauntlet USDC core",
-    "user_comment": "morpho gauntlet USDC core"
+    "user_comment": "morpho gauntlet USDC core",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "51b5c6c2-d2f2-45f6-95b0-314efbfae6d7",
     "chain": "ethereum",
     "project": "morpho",
     "symbol": "gauntlet USDC frontier",
-    "user_comment": "morpho gauntlet USDC frontier"
+    "user_comment": "morpho gauntlet USDC frontier",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "ab439af4-9978-4542-bc65-2772dfb79e50",
     "chain": "ethereum",
     "project": "morpho",
     "symbol": "gauntlet USDC prime",
-    "user_comment": "morpho gauntlet USDC prime"
+    "user_comment": "morpho gauntlet USDC prime",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "6fcfa6f7-861f-4d50-b594-190f4be37abf",
     "chain": "ethereum",
     "project": "morpho",
     "symbol": "smokehouse usdc",
-    "user_comment": "morpho smokehouse usdc"
+    "user_comment": "morpho smokehouse usdc",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "a44febf3-34f6-4cd5-8ab1-f246ebe49f9e",
     "chain": "ethereum",
     "project": "morpho",
     "symbol": "stakehouse USDC",
-    "user_comment": "morpho stakehouse USDC"
+    "user_comment": "morpho stakehouse USDC",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": null,
     "chain": "ethereum",
     "project": "pendle",
     "symbol": "pt crvusd",
-    "user_comment": "pendle pt crvusd"
+    "user_comment": "pendle pt crvusd",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": null,
     "chain": "ethereum",
     "project": "pendle",
     "symbol": "pt eusde",
-    "user_comment": "pendle pt eusde"
+    "user_comment": "pendle pt eusde",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": null,
     "chain": "ethereum",
     "project": "pendle",
     "symbol": "pt susde",
-    "user_comment": "pendle pt susde"
+    "user_comment": "pendle pt susde",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": null,
     "chain": "ethereum",
     "project": "pendle",
     "symbol": "pt usdc aave",
-    "user_comment": "pendle pt usdc aave"
+    "user_comment": "pendle pt usdc aave",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": null,
     "chain": "ethereum",
     "project": "pendle",
     "symbol": "pt usdc fluid",
-    "user_comment": "pendle pt usdc fluid"
+    "user_comment": "pendle pt usdc fluid",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "d8c4eff5-c8a9-46fc-a888-057c4c668e72",
     "chain": "ethereum",
     "project": "sky",
     "symbol": "usds",
-    "user_comment": "sky usds"
+    "user_comment": "sky usds",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "e880e828-ca59-4ec6-8d4f-27182a4dc23d",
     "chain": "ethereum",
     "project": "aave",
     "symbol": "eth",
-    "user_comment": "aave eth"
+    "user_comment": "aave eth",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": "1e5da7c6-59bb-49bd-9f97-4f4fceeffad4",
     "chain": "ethereum",
     "project": "compound",
     "symbol": "eth",
-    "user_comment": "compound eth"
+    "user_comment": "compound eth",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": null,
     "chain": "ethereum",
     "project": "euler",
     "symbol": "prime wETH",
-    "user_comment": "euler prime wETH"
+    "user_comment": "euler prime wETH",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": null,
     "chain": "ethereum",
     "project": "fluid",
     "symbol": "wETH",
-    "user_comment": "fluid wETH"
+    "user_comment": "fluid wETH",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": null,
     "chain": "ethereum",
     "project": "fluid",
     "symbol": "wstETH",
-    "user_comment": "fluid wstETH"
+    "user_comment": "fluid wstETH",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": "747c1d2a-c668-4682-b9f9-296708a3dd90",
     "chain": "ethereum",
     "project": "lido",
     "symbol": "eth",
-    "user_comment": "lido eth"
+    "user_comment": "lido eth",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": null,
     "chain": "ethereum",
     "project": "mellow",
     "symbol": "rstETH",
-    "user_comment": "mellow rstETH"
+    "user_comment": "mellow rstETH",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": null,
     "chain": "ethereum",
     "project": "morpho",
     "symbol": "gauntlet wETH core",
-    "user_comment": "morpho gauntlet wETH core"
+    "user_comment": "morpho gauntlet wETH core",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": "85be31a9-9082-46b7-8b55-945aac96d014",
     "chain": "ethereum",
     "project": "morpho",
     "symbol": "gauntlet wETH prime",
-    "user_comment": "morpho gauntlet wETH prime"
+    "user_comment": "morpho gauntlet wETH prime",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": "e6fe542f-e35f-445e-8465-cebc8cd37967",
     "chain": "ethereum",
     "project": "morpho",
     "symbol": "mev capital ETH",
-    "user_comment": "morpho mev capital ETH"
+    "user_comment": "morpho mev capital ETH",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": "bf3815bb-1059-4f24-90a3-14998e8493fa",
     "chain": "ethereum",
     "project": "morpho",
     "symbol": "re7 wETH",
-    "user_comment": "morpho re7 wETH"
+    "user_comment": "morpho re7 wETH",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": "3925e26d-d104-4d4f-88c7-205c00399598",
     "chain": "ethereum",
     "project": "morpho",
     "symbol": "stakehouse ETH",
-    "user_comment": "morpho stakehouse ETH"
+    "user_comment": "morpho stakehouse ETH",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": null,
     "chain": "ethereum",
     "project": "symbiotic",
     "symbol": "gauntlet gtrwstETH ",
-    "user_comment": "symbiotic gauntlet gtrwstETH "
+    "user_comment": "symbiotic gauntlet gtrwstETH ",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": null,
     "chain": "ethereum",
     "project": "curve",
     "symbol": "crv",
-    "user_comment": "curve crv"
+    "user_comment": "curve crv",
+    "ticker_group": "defi"
   },
   {
     "defilama_id": "361a79a4-b0aa-4d0f-91a3-7fd9712b8c66",
     "chain": "ethereum",
     "project": "curve",
     "symbol": "tBTC/cbBTC",
-    "user_comment": "curve tBTC/cbBTC"
+    "user_comment": "curve tBTC/cbBTC",
+    "ticker_group": "btc"
   },
   {
     "defilama_id": "3dadbe45-e87f-43a5-820a-20c908bef612",
     "chain": "ethereum",
     "project": "curve",
     "symbol": "tBTC/wBTC",
-    "user_comment": "curve wBTC/tBTC"
+    "user_comment": "curve wBTC/tBTC",
+    "ticker_group": "btc"
   },
   {
     "defilama_id": "f194f422-b98a-4103-81d7-51bf6464d58b",
     "chain": "ethereum",
     "project": "curve",
     "symbol": "wBTC/cbBTC",
-    "user_comment": "curve wBTC/cbBTC"
+    "user_comment": "curve wBTC/cbBTC",
+    "ticker_group": "btc"
   },
   {
     "defilama_id": "ac164d4e-855d-4eed-bebf-0c04c0fac54b",
     "chain": "ethereum",
     "project": "euler",
     "symbol": "prime cbBTC",
-    "user_comment": "euler prime cbBTC"
+    "user_comment": "euler prime cbBTC",
+    "ticker_group": "btc"
   },
   {
     "defilama_id": "c97627c2-1ae8-48dc-92c4-4d265511d7d0",
     "chain": "ethereum",
     "project": "morpho",
     "symbol": "gauntlet cbbtc core",
-    "user_comment": "morpho gauntlet cbbtc core"
+    "user_comment": "morpho gauntlet cbbtc core",
+    "ticker_group": "btc"
   },
   {
     "defilama_id": "1d5162d1-a836-429f-9eec-50d6ef592e1f",
     "chain": "ethereum",
     "project": "morpho",
     "symbol": "mev capital cbbtc",
-    "user_comment": "morpho mev capital cbbtc"
+    "user_comment": "morpho mev capital cbbtc",
+    "ticker_group": "btc"
   },
   {
     "defilama_id": "c6b26005-8d8d-4e30-87be-6294d6c0635d",
     "chain": "ethereum",
     "project": "morpho",
     "symbol": "smokehouse cbBTC",
-    "user_comment": "morpho smokehouse cbBTC"
+    "user_comment": "morpho smokehouse cbBTC",
+    "ticker_group": "btc"
   },
   {
     "defilama_id": "0cb08169-7e04-4da8-a11a-821c69d2a93e",
     "chain": "ethereum",
     "project": "pendle",
     "symbol": "pt WBTC",
-    "user_comment": "pendle pt WBTC"
+    "user_comment": "pendle pt WBTC",
+    "ticker_group": "btc"
   },
   {
     "defilama_id": "7e0661bf-8cf3-45e6-9424-31916d4c7b84",
     "chain": "base",
     "project": "aave",
     "symbol": "usdc",
-    "user_comment": "aave usdc"
+    "user_comment": "aave usdc",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "0c8567f8-ba5b-41ad-80de-00a71895eb19",
     "chain": "base",
     "project": "compound",
     "symbol": "usdc",
-    "user_comment": "compound usdc"
+    "user_comment": "compound usdc",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": null,
     "chain": "base",
     "project": "euler",
     "symbol": "base USDC",
-    "user_comment": "euler base USDC"
+    "user_comment": "euler base USDC",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": null,
     "chain": "base",
     "project": "euler",
     "symbol": "base USDS",
-    "user_comment": "euler base USDS"
+    "user_comment": "euler base USDS",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": null,
     "chain": "base",
     "project": "fluid",
     "symbol": "sUSDS",
-    "user_comment": "fluid sUSDS"
+    "user_comment": "fluid sUSDS",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "7372edda-f07f-4598-83e5-4edec48c4039",
     "chain": "base",
     "project": "fluid",
     "symbol": "USDC",
-    "user_comment": "fluid USDC"
+    "user_comment": "fluid USDC",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "34d90c49-da88-49b2-937e-04c2b1f5d7fe",
     "chain": "base",
     "project": "morpho",
     "symbol": "gauntlet USDC core",
-    "user_comment": "morpho gauntlet USDC core"
+    "user_comment": "morpho gauntlet USDC core",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "ab439af4-9978-4542-bc65-2772dfb79e50",
     "chain": "base",
     "project": "morpho",
     "symbol": "gauntlet USDC prime",
-    "user_comment": "morpho gauntlet USDC prime"
+    "user_comment": "morpho gauntlet USDC prime",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "4a22de3c-271e-4152-b8d8-29053de06f37",
     "chain": "base",
     "project": "morpho",
     "symbol": "seamless USDC gauntlet",
-    "user_comment": "morpho seamless USDC gauntlet"
+    "user_comment": "morpho seamless USDC gauntlet",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "9f146531-9c31-46ba-8e26-6b59bdaca9ff",
     "chain": "base",
     "project": "morpho",
     "symbol": "spark USDC vault",
-    "user_comment": "morpho spark USDC vault"
+    "user_comment": "morpho spark USDC vault",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": "3ad60cb7-74db-448b-9e3b-e6af576e697f",
     "chain": "base",
     "project": "morpho",
     "symbol": "stakehouse USDC",
-    "user_comment": "morpho stakehouse USDC"
+    "user_comment": "morpho stakehouse USDC",
+    "ticker_group": "stables"
   },
   {
     "defilama_id": null,
     "chain": "base",
     "project": "aerodrome",
     "symbol": "CL100-WETH/USDC concentrated volatile 100",
-    "user_comment": "aerodrome CL100-WETH/USDC concentrated volatile 100"
+    "user_comment": "aerodrome CL100-WETH/USDC concentrated volatile 100",
+    "ticker_group": "liq"
   },
   {
     "defilama_id": "5d3c8dc7-276d-4bbe-8a98-6d75770fada8",
     "chain": "base",
     "project": "aerodrome",
     "symbol": "vAMM-WETH/USDC basic volatile",
-    "user_comment": "aerodrome vAMM-WETH/USDC basic volatile"
+    "user_comment": "aerodrome vAMM-WETH/USDC basic volatile",
+    "ticker_group": "liq"
   },
   {
     "defilama_id": "23405eee-97e7-4b8e-8625-19c3a36047e8",
     "chain": "base",
     "project": "aave",
     "symbol": "eth",
-    "user_comment": "aave eth"
+    "user_comment": "aave eth",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": "7993b97d-12c3-4a36-b6b6-5b37bac4f8ae",
     "chain": "base",
     "project": "compound",
     "symbol": "eth",
-    "user_comment": "compound eth"
+    "user_comment": "compound eth",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": "475d7ab5-a4b8-4400-ad1c-94ef9e8bdfe3",
     "chain": "base",
     "project": "curve",
     "symbol": "cbeth/weth",
-    "user_comment": "curve cbeth/weth"
+    "user_comment": "curve cbeth/weth",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": null,
     "chain": "base",
     "project": "euler",
     "symbol": "base wETH",
-    "user_comment": "euler base wETH"
+    "user_comment": "euler base wETH",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": null,
     "chain": "base",
     "project": "fluid",
     "symbol": "wstETH",
-    "user_comment": "fluid wstETH"
+    "user_comment": "fluid wstETH",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": "106aff6b-42da-4d79-acb5-a88086f9e884",
     "chain": "base",
     "project": "morpho",
     "symbol": "gauntlet wETH core",
-    "user_comment": "morpho gauntlet wETH core"
+    "user_comment": "morpho gauntlet wETH core",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": "df16d442-47a9-4725-a9a0-d9ce8096562d",
     "chain": "base",
     "project": "morpho",
     "symbol": "seamless wETH gauntlet",
-    "user_comment": "morpho seamless wETH gauntlet"
+    "user_comment": "morpho seamless wETH gauntlet",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": "b82d1970-3606-4363-a10e-180159fe8242",
     "chain": "base",
     "project": "pendle",
     "symbol": "cbeth",
-    "user_comment": "pendle cbeth"
+    "user_comment": "pendle cbeth",
+    "ticker_group": "eth"
   },
   {
     "defilama_id": "89bc7c4c-d71c-435c-ab28-56c803d51320",
     "chain": "base",
     "project": "aave",
     "symbol": "cbbtc",
-    "user_comment": "aave cbbtc"
+    "user_comment": "aave cbbtc",
+    "ticker_group": "btc"
   },
   {
     "defilama_id": "8b1f0de0-6ff5-47d1-855b-bd9bb87264cc",
     "chain": "base",
     "project": "aerodrome",
     "symbol": "cbbtc/tbtc basic stable",
-    "user_comment": "aerodrome cbbtc/tbtc basic stable"
+    "user_comment": "aerodrome cbbtc/tbtc basic stable",
+    "ticker_group": "btc"
   },
   {
     "defilama_id": null,
     "chain": "base",
     "project": "aerodrome",
     "symbol": "cbbtc/tbtc concentrated stable 1",
-    "user_comment": "aerodrome cbbtc/tbtc concentrated stable 1"
+    "user_comment": "aerodrome cbbtc/tbtc concentrated stable 1",
+    "ticker_group": "btc"
   },
   {
     "defilama_id": null,
     "chain": "base",
     "project": "euler",
     "symbol": "base cbBTC",
-    "user_comment": "euler base cbBTC"
+    "user_comment": "euler base cbBTC",
+    "ticker_group": "btc"
   },
   {
     "defilama_id": "9ad2bfd2-bf97-4585-b752-d931e6f66ac1",
     "chain": "base",
     "project": "morpho",
     "symbol": "gauntlet cbBTC core",
-    "user_comment": "morpho gauntlet cbBTC core"
+    "user_comment": "morpho gauntlet cbBTC core",
+    "ticker_group": "btc"
   },
   {
     "defilama_id": "1b174b02-1409-41bc-bead-549181e13c55",
     "chain": "base",
     "project": "morpho",
     "symbol": "seamless cbBTC gauntlet",
-    "user_comment": "morpho seamless cbBTC gauntlet"
+    "user_comment": "morpho seamless cbBTC gauntlet",
+    "ticker_group": "btc"
   }
 ]
