@@ -77,20 +77,25 @@ def get_defilama_pools_data_sync() -> dict | None:
         return None
 
 def format_number(number) -> str:
-    """Форматирует число для вывода (добавляет запятые, округляет)."""
+    """Форматирует число для вывода (добавляет запятые, округляет) и экранирует точки для MarkdownV2."""
     if number is None:
         return "N/A"
     try:
         num = float(number)
+        formatted_num_str = ""
         if num >= 1_000_000_000:
-            return f"{num / 1_000_000_000:.2f}B"
-        if num >= 1_000_000:
-            return f"{num / 1_000_000:.2f}M"
-        if num >= 1_000:
-            return f"{num / 1_000:.2f}K"
-        if 0 < abs(num) < 0.01:
-             return f"{num:.4f}" # Для очень маленьких APY
-        return f"{num:,.2f}"
+            formatted_num_str = f"{num / 1_000_000_000:.2f}B"
+        elif num >= 1_000_000:
+            formatted_num_str = f"{num / 1_000_000:.2f}M"
+        elif num >= 1_000:
+            formatted_num_str = f"{num / 1_000:.2f}K"
+        elif 0 < abs(num) < 0.01:
+             formatted_num_str = f"{num:.4f}" # Для очень маленьких APY
+        else:
+            formatted_num_str = f"{num:,.2f}"
+
+        # Экранируем точку для MarkdownV2
+        return formatted_num_str.replace('.', '\\.')
     except (ValueError, TypeError):
         return "N/A"
 
@@ -200,12 +205,16 @@ async def pools_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                  apy = found_pool_data.get('apyBase') # Если нет 'apy', попробуем 'apyBase'
             # Можно добавить логику для apyReward, если нужно
             tvl = found_pool_data.get('tvlUsd')
-            # Используем MarkdownV2
+            chain = found_pool_data.get('chain', 'N/A') # Получаем сеть
+            # Используем MarkdownV2, добавляем сеть в скобках
+            # Экранируем скобки вокруг сети
             message_lines.append(
-                f"`{user_comment}`: APY `{format_number(apy)}%`, TVL `${format_number(tvl)}`"
+                f"`{user_comment}` \\({chain}\\): APY `{format_number(apy)}%`, TVL `${format_number(tvl)}`"
             )
         else:
-            message_lines.append(f"`{user_comment}`: Не найден")
+            # Добавляем сеть и для ненайденных, если она есть в конфиге
+            chain_from_config = pool_config.get("chain", "N/A")
+            message_lines.append(f"`{user_comment}` \\({chain_from_config}\\): Не найден")
 
     if found_count == 0 and len(tracked_pools) > 0:
          message_lines.append("\n_Не удалось найти данные ни для одного из отслеживаемых пулов._")
